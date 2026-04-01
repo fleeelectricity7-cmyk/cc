@@ -1,0 +1,101 @@
+-- [[ 1. DATABASE & CONFIGURATION ]]
+local OwnerID = 10528045140
+local Player = game:GetService("Players").LocalPlayer
+
+-- BẢNG TRA CỨU SERIAL (Sếp quản lý tại đây)
+local SerialDatabase = {
+    ["00000"] = 10528045140, -- Master Key (Sếp QuangAnh - Acc: cayviche)
+    ["00001"] = 8790391316,   -- Serial Key (Em trai Sếp)
+    ["00002"] = 123456789,   -- Dự phòng khách hàng mới
+}
+
+-- [[ 2. AUTO REJOIN & ANTI-AFK (CHẠY NGẦM) ]]
+local function InitSecurity()
+    -- Tự động vào lại khi mất kết nối
+    game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+        task.wait(5)
+        game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
+    end)
+    
+    -- Chống treo máy bị Kick
+    local VirtualUser = game:GetService("VirtualUser")
+    Player.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end
+
+-- [[ 3. GIAO DIỆN XÁC MINH (LOGIN UI) ]]
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local KeyWindow = Rayfield:CreateWindow({
+   Name = "QuangAnh Hub | SERIAL SYSTEM",
+   LoadingTitle = "Xác minh ID: " .. Player.UserId,
+   LoadingSubtitle = "Secure by QUANGMINH2064",
+})
+
+local VerifyTab = KeyWindow:CreateTab("Xác Minh", 4483362458)
+
+VerifyTab:CreateInput({
+   Name = "Nhập Serial Key của bạn",
+   PlaceholderText = "VD: 00000",
+   Callback = function(Text) 
+      _G.SerialInput = Text:gsub("%s+", "") -- Tự xóa khoảng trắng thừa
+   end,
+})
+
+VerifyTab:CreateButton({
+   Name = "Kích Hoạt QuangAnh Hub",
+   Callback = function()
+      local input = _G.SerialInput
+      local currentID = Player.UserId
+      
+      -- Logic kiểm tra: Đúng Mã + Đúng ID chủ sở hữu mã đó
+      if SerialDatabase[input] and SerialDatabase[input] == currentID then
+          Rayfield:Notify({Title = "THÀNH CÔNG!", Content = "Chào mừng " .. Player.Name .. "!", Duration = 5})
+          InitSecurity() -- Bật bảo vệ ngầm
+          task.wait(1)
+          KeyWindow:Destroy()
+          StartMainHub() -- Mở Hub chính
+      else
+          Rayfield:Notify({Title = "LỖI XÁC MINH!", Content = "Mã không khớp với ID máy này!", Duration = 7})
+      end
+   end,
+})
+
+-- [[ 4. HÀM CHỨC NĂNG CHÍNH (MAIN HUB) ]]
+function StartMainHub()
+    local Window = Rayfield:CreateWindow({
+       Name = "QuangAnh Hub | VVIP MASTER",
+       LoadingTitle = "Đã nạp toàn bộ tính năng",
+       LoadingSubtitle = "Phiên bản SAFE MODE",
+    })
+
+    -- --- TAB: KAITUN (FARM) ---
+    local FarmTab = Window:CreateTab("Kaitun", 4483362458)
+    FarmTab:CreateToggle({Name = "Auto Farm Level", CurrentValue = false, Callback = function(v) _G.AutoFarm = v end})
+    FarmTab:CreateToggle({Name = "Auto Chest (Nhặt Rương)", CurrentValue = false, Callback = function(v) _G.AutoChest = v end})
+    FarmTab:CreateToggle({Name = "Safe Mode (Anti-Ban)", CurrentValue = true, Callback = function(v) _G.SafeMode = v end})
+
+    -- --- TAB: ITEMS & QUEST ---
+    local ItemTab = Window:CreateTab("Items", 4483345998)
+    ItemTab:CreateButton({Name = "Get Soul Guitar", Callback = function() end})
+    ItemTab:CreateButton({Name = "Get Godhuman", Callback = function() end})
+
+    -- --- TAB: RACE V4 ---
+    local RaceTab = Window:CreateTab("Race V4", 4483362458)
+    RaceTab:CreateButton({Name = "Find Mirage Island", Callback = function() end})
+    RaceTab:CreateToggle({Name = "Auto Trial V4", CurrentValue = false, Callback = function(v) end})
+
+    -- --- TAB: SEA EVENT & RAID ---
+    local EventTab = Window:CreateTab("Sea & Raid", 4483345998)
+    EventTab:CreateToggle({Name = "Auto Sea Beast", CurrentValue = false, Callback = function(v) end})
+    EventTab:CreateToggle({Name = "Auto Terrorshark", CurrentValue = false, Callback = function(v) end})
+    EventTab:CreateToggle({Name = "Auto Raid (Phá Đảo)", CurrentValue = false, Callback = function(v) end})
+
+    -- --- TAB: SETTINGS ---
+    local SetTab = Window:CreateTab("Cài Đặt", 4483345998)
+    SetTab:CreateButton({Name = "Server Hop", Callback = function() end})
+    SetTab:CreateButton({Name = "Clear Lag / Fog", Callback = function() end})
+
+    Rayfield:Notify({Title = "Sẵn Sàng!", Content = "QuangAnh Hub đã sẵn sàng phục vụ sếp.", Duration = 5})
+end
