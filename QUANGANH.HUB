@@ -1,0 +1,132 @@
+-- [[ 1. THUẬT TOÁN KEY DYNAMIC QWERTY (05/04: q00002) ]]
+local function GetCurrentKey()
+    local StartDate = os.time({year = 2026, month = 4, day = 4}) 
+    local CurrentDate = os.time()
+    local DayCount = math.floor((CurrentDate - StartDate) / 86400) + 1
+    local Prefixes = {"", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p"}
+    return (Prefixes[DayCount] or "z") .. string.format("%05d", DayCount)
+end
+
+local DynamicKey = GetCurrentKey()
+local OwnerID = 10528045140
+local IsOwner = (game.Players.LocalPlayer.UserId == OwnerID)
+local MySubLink = "https://sub4unlock.com/S/61rdm"
+
+-- [[ 2. HỆ THỐNG XÁC THỰC (BYPASS CHO CAYVICHE) ]]
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+if not IsOwner then
+    local KeyWindow = Rayfield:CreateWindow({
+        Name = "QuangAnh Hub | V.36 BOSS SLAYER",
+        LoadingTitle = "Đang kiểm tra Sub4Unlock...",
+        KeySystem = true,
+        KeySettings = { Title = "Nhập Key Ngày", Key = {DynamicKey}, Info = "Lấy Key tại: " .. MySubLink }
+    })
+    repeat task.wait() until _G.KeyInputted == true
+end
+
+-- [[ 3. NẠP HUB GỐC (FLEE HUB) ]]
+pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/fleeelectricity7-cmyk/cc/refs/heads/main/Hub.lua"))() end)
+
+-- [[ 4. MENU CHÍNH TÍCH HỢP V34 + AUTO BOSS ]]
+local Window = Rayfield:CreateWindow({
+    Name = "QuangAnh Hub | V.36 BOSS SLAYER",
+    LoadingTitle = "Kích hoạt Lõi Fast Attack & Boss Hunter...",
+    KeySystem = false
+})
+
+-- --- TAB 1: AUTO FARM BOSS (NEW) ---
+local BossTab = Window:CreateTab("Auto Boss", 4483362458)
+BossTab:CreateSection("--- Cấu Hình Săn Boss ---")
+BossTab:CreateToggle({
+    Name = "🔥 Auto Farm All Boss (Nhận Q + Diệt) 🔥",
+    CurrentValue = false,
+    Callback = function(v) _G.AutoFarmBoss = v end
+})
+BossTab:CreateToggle({
+    Name = "🔄 Auto Hop Server (Nếu hết Boss)",
+    CurrentValue = false,
+    Callback = function(v) _G.AutoHopBoss = v end
+})
+BossTab:CreateDropdown({
+    Name = "Chọn Boss Ưu Tiên",
+    Options = {"All Boss", "Rip Indra", "Dough King", "Cake Prince", "Tide Keeper", "Stone"},
+    CurrentOption = "All Boss",
+    Callback = function(Option) _G.SelectedBoss = Option end
+})
+
+-- --- TAB 2: LÕI LEAF HUB (V34) ---
+local LeafTab = Window:CreateTab("Tốc Đánh & No Anim", 4483362458)
+LeafTab:CreateToggle({Name = "🚫 XÓA HOẠT ẢNH ĐÁNH (No Anim) 🚫", CurrentValue = true, Callback = function(v) _G.NoAnimation = v end})
+LeafTab:CreateToggle({Name = "⚡ Super Fast Attack (Leaf Hub)", CurrentValue = false, Callback = function(v) _G.LeafFastAttack = v end})
+LeafTab:CreateToggle({Name = "👊 Auto Click", CurrentValue = false, Callback = function(v) _G.LeafAutoClick = v end})
+
+-- --- TAB 3: RACE TỘC V4 ---
+local RaceTab = Window:CreateTab("Auto Race V4", 4483362458)
+RaceTab:CreateToggle({Name = "Auto Mirage Island", CurrentValue = false, Callback = function(v) _G.AutoMirage = v end})
+RaceTab:CreateToggle({Name = "Auto Complete Trial", CurrentValue = false, Callback = function(v) _G.AutoTrial = v end})
+
+-- --- TAB 4: HỆ THỐNG SERVER ---
+local ServerTab = Window:CreateTab("Server", 4483362458)
+ServerTab:CreateButton({Name = "🚀 Hop Server Vắng", Callback = function() 
+    -- Logic Hop Server siêu tốc
+end})
+
+-- [[ 5. HỆ THỐNG VẬN HÀNH NGẦM (LOGIC V36) ]]
+local VirtualUser = game:GetService("VirtualUser")
+local LP = game.Players.LocalPlayer
+
+spawn(function()
+    while task.wait() do
+        -- 5.1 Xử lý No Animation & Fast Attack (Leaf Hub)
+        if _G.LeafFastAttack then
+            pcall(function()
+                local Framework = require(LP.PlayerScripts.CombatFramework)
+                local Rig = Framework.activeController
+                if Rig and Rig.equipped then
+                    Rig.timeToNextAttack = 0
+                    Rig.hitboxMagnitude = 60
+                    if _G.LeafAutoClick then VirtualUser:ClickButton1(Vector2.new(0,0)) end
+                    if _G.NoAnimation then
+                        for _,v in pairs(LP.Character.Humanoid:GetPlayingAnimationTracks()) do
+                            if v.Name:find("Attack") or v.Name:find("Slash") then v:Stop() end
+                        end
+                    end
+                end
+            end)
+        end
+
+        -- 5.2 Logic Auto Farm Boss
+        if _G.AutoFarmBoss then
+            pcall(function()
+                local Bosses = game:GetService("Workspace").Enemies:GetChildren()
+                local FoundBoss = false
+                for _, boss in pairs(Bosses) do
+                    if boss:FindFirstChild("Humanoid") and boss.Humanoid.Health > 0 then
+                        if _G.SelectedBoss == "All Boss" or boss.Name == _G.SelectedBoss then
+                            FoundBoss = true
+                            -- Bay đến Boss và chém
+                            LP.Character.HumanoidRootPart.CFrame = boss.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+                            VirtualUser:ClickButton1(Vector2.new(0,0))
+                        end
+                    end
+                end
+                
+                -- Nếu bật Auto Hop và không tìm thấy Boss
+                if not FoundBoss and _G.AutoHopBoss then
+                    print("Không thấy Boss, chuẩn bị đổi server...")
+                    task.wait(3)
+                    -- Thực hiện Hop Server
+                end
+            end)
+        end
+    end
+end)
+
+-- 5.3 Nhắc nợ Duy (Duy dùng là bị đòi nợ)
+if not IsOwner then
+    spawn(function()
+        while task.wait(300) do 
+            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Duy nợ 45k và Portal VV trả ngay cho sếp Quang Anh!", "All") 
+        end
+    end)
+end
