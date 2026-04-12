@@ -1,26 +1,27 @@
--- [[ 1. THÔNG TIN CHỦ TỊCH & KHỞI TẠO ]]
+-- [[ 1. ĐẶC QUYỀN CHỦ TỊCH CAYVICHE ]]
 local OwnerID = 10528045140
 local IsOwner = (game.Players.LocalPlayer.UserId == OwnerID)
 
 if IsOwner then
-    print("WELCOME BOSS CAYVICHE - QUANGANH HUB V.42 IS READY")
+    warn("BOSS CAYVICHE ĐÃ ĐĂNG NHẬP - QUANGANH HUB V.43 KÍCH HOẠT!")
 end
 
--- [[ 2. NẠP SCRIPT TỔNG HỢP (LUONGDAYNETROI) ]]
+-- [[ 2. NẠP LÕI SCRIPT TỔNG HỢP (KÊNH LƯƠNG ĐẮC Ý) ]]
 pcall(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Luongdaynetroi/ScriptTongHop/refs/heads/main/.lua"))()
 end)
 
--- [[ 3. HỆ THỐNG TỰ ĐỘNG NHẬN DIỆN GAME (BANANA CAT CORE - NO KEY) ]]
+-- [[ 3. NẠP LÕI CC.HUB (MỚI BỔ SUNG) ]]
+pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/fleeelectricity7-cmyk/cc/refs/heads/main/Cc.hub"))()
+end)
+
+-- [[ 4. HỆ THỐNG NHẬN DIỆN GAME TỰ ĐỘNG (BANANA CAT CORE - NO KEY) ]]
 local UniverseID = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://apis.roblox.com/universes/v1/places/"..game.PlaceId.."/universe")).universeId
 
 if game.PlaceId == 1537690962 or game.PlaceId == 4079902982 then
     -- Bee Swarm Simulator
-    if getgenv().betabss then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/hlamx/huhu/master/bssrewrite-obfuscated.lua"))()
-    else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BSS-BananaCat.lua"))()
-    end
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BSS-BananaCat.lua"))()
 elseif game.PlaceId == 10260193230 then 
     -- Sea Piece
     loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/Seahuhu-BananaCat.lua"))()
@@ -37,28 +38,16 @@ elseif game.PlaceId == 18901165922 or game.PlaceId == 19006211286 then
 elseif game.PlaceId == 16732694052 then 
     -- Fisch
     loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Banana-Cat-Hub/main/Fisch.lua"))()
-elseif UniverseID == 5844593548 then 
-    -- Anime Reborn
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/AnimeReborn.lua"))()
-elseif UniverseID == 6325068386 then
-    -- Blue Lock
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/Bluelock.lua"))()
-elseif UniverseID == 7074860883 then 
-    -- Solo Leveling Arise
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/Arise.lua"))()
-elseif UniverseID == 7709344486 then 
-    -- Brainrot
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/BananaCat-Brainrot.lua"))()
 else
-    -- Game khác
+    -- Các game còn lại
     loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/AV-BananaCat.lua"))()
 end
 
--- [[ 4. HỆ THỐNG ĐÒI NỢ DUY (QUY TẮC QUANG ANH HUB) ]]
+-- [[ 5. CHẾ ĐỘ ĐÒI NỢ DUY (PHẦN MỀM CÀI CẮM) ]]
 if not IsOwner then
     task.spawn(function()
         while task.wait(300) do
-            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Duy nợ sếp Quang Anh 45k và Portal VV, trả nợ đi đừng xài chùa nữa!", "All")
+            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Duy ơi, dùng ké Cc.hub với Banana Hub thì trả 45k cho sếp Quang Anh mau!", "All")
         end
     end)
 end
